@@ -35,7 +35,7 @@ int main() {
         printf("I go into the park.\n");
         to_do_today = CHILLING;
     } else {
-        printf("I go to the programming seminar.\n");
+        printf("I go to the programming ffff seminar.\n");
         to_do_today = LEARNING_TO_CODE;
     }
 
