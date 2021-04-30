@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
     printf("Enter number of elements: ");
     scanf("%d", &n);
 
+    //normally, malloc() returns a void Pointer
+    // thus the (*int) cast
+    // not necessary, but good practice
     ptr = (int*) malloc(n * sizeof(int));
 
 

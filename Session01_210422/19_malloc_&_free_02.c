@@ -14,7 +14,7 @@ void *theImpermanenceOfTheStack()
     // to main and accessing it from there would crash the
     // the programm. Try it!
 }
-
+/*
 void *thePermanentHeap()
 {
     int *aHeapPointer = (int *)malloc(sizeof(int) * 10);
@@ -27,6 +27,27 @@ void *thePermanentHeap()
     else
         return NULL;
 }
+*/
+
+void *thePermanentHeap()
+{
+    int *aHeapPointer = (int *)malloc(sizeof(int) * 10);
+    int *start = aHeapPointer;
+    int *end = aHeapPointer + 10;
+    int i = 0;
+    if(aHeapPointer != NULL)
+    {
+        while(start < end)
+        {
+            *aHeapPointer += i;
+            *aHeapPointer = i;
+            i++;
+            start++;
+        }
+            //aHeapPointer[i] = i;
+        return aHeapPointer;
+    }
+}
 
 int main()
 {
@@ -34,7 +55,11 @@ int main()
     if(ptr != NULL)
     {
         printf("I can allocate memory somewhere else and access it here!\n");
-        printf("%d\n", ptr[4]);
+        for(int i = 0;i < 10; i++)
+        {
+                printf("Heap value at index %d = %d \n", i, *ptr);
+        }
+        //printf("%d\n", ptr[4]);
         free(ptr);
     }
     

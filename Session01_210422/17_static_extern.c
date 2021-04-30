@@ -9,9 +9,9 @@
 // ./my_file
 
 #include <stdio.h>
-#include "17_static_extern_global_var.h"
+#include "17_StaticExternGlobalVar.h"
 
-static int j = 0; // j can only be accessed in this file, a global variable without the
+// static int j = 0; // j can only be accessed in this file, a global variable without the
 //keyword static could also be accessed in other .c files. In order to use it in another file
 // the variable has to be declared again with the keyword extern.
 
@@ -38,6 +38,9 @@ void down(void)
 int main(void)
 {
     int i;
+
+    extern int j;
+    printf("extern var output = %d\n", j);
     
     /* call the up function 3 times, then the down function 2 times */
     for (i = 0; i < 3; i++)
