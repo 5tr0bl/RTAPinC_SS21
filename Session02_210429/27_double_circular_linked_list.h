@@ -96,6 +96,8 @@ p_node_t delete_node_with_data(p_node_t *head_ref, int data);
  */
 void print_list(p_node_t *head_ref);
 
+void sort_list_with_pointers(p_node_t *head_ref);
+
 /**
  * @brief Function to sort the nodes in ascending data order.
  * @param head_ref pointer to the head node pointer.
@@ -142,7 +144,7 @@ bool is_empty(p_node_t *head_ref);
  * @param delete pointer to the node to delete.
  * @return p_node_t pointer to the head node.
  */
-p_node_t delete_node(p_node_t *head_ref, p_node_t delete);
+p_node_t delete_node(p_node_t *head_ref, p_node_t del);
 
 
 #endif /* _27_double_circular_linked_list_h */

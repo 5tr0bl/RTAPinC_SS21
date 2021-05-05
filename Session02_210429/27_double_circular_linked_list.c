@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
         printf(" -4- Delete node with data\n");
         printf(" -5- List nodes\n");
         printf(" -6- Sort nodes\n");
+        printf(" -7- Sort nodes by using pointers\n");
         printf(" -0- Exit\n");
         printf("Choose an action: ");
 
@@ -84,6 +85,11 @@ int main(int argc, char* argv[]) {
                 print_list(&head);
                 break;
 
+            case 7:
+                sort_list_with_pointers(&head);
+                print_list(&head);
+                break;
+
             default: if (choice !=0) {
                 printf("Wrong input\n");
                 choice = 0; // Exit program
@@ -92,6 +98,9 @@ int main(int argc, char* argv[]) {
         }
 
     } while ( choice != 0 );
+
+    //sort_list_with_pointers(*head);
+    //print_list(*head);
 
     printf ("Exit and good bye!\n");
 
@@ -379,7 +388,40 @@ p_node_t delete_node(p_node_t *head_ref, p_node_t del)
     return *head_ref;
 }
 
+void sort_list_with_pointers(p_node_t *head_ref) {
+    if(!is_empty(head_ref))
+    {
+        p_node_t *helper = head_ref;
 
+        p_node_t before = *head_ref;
+        p_node_t after = before->next;
+    
+    for (before = *head_ref; before->next != *head_ref; before = before->next)
+    {
+        for (after = before->next; after != *head_ref; after = after->next)
+        {
+            if (before->data > after->data) {
+                before->prev->next = after;
+                after->next->prev = before;
+
+                after->prev = before->prev;
+                before->next = after->next;
+                before->prev = after;
+                after->next = before;
+
+                if(*head_ref == before)
+                {
+                    *head_ref = after;
+                }
+
+                //Wenn before der Header war, muss jetzt after der Header sein
+                //after->next->prev muss jetzt before werden
+                //before->prev->next muss jetzt after werden
+            }
+        }
+    }
+    }
+}
 
 void sort_list(p_node_t *head_ref) {
     
