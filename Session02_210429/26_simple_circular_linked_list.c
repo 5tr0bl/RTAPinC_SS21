@@ -64,11 +64,13 @@ void insert_node(p_node_t new_node) {
     
     // Check if there is a list
     if (is_empty()) {
- 
+        g_p_head = new_node;
+        new_node->next = new_node;
+        current = new_node;
         
     } else {
         //point it to old first node
-        
+        new_node->next = g_p_head;
         
         //point first to new first node
         

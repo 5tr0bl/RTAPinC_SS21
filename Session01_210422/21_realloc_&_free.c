@@ -22,7 +22,7 @@ int main()
     
     printf("\nEnter new size of array: ");
     scanf("%d", &n2);
-    ptr = realloc(ptr, n2 * sizeof(int));
+    ptr = (int*)realloc(ptr, n2 * sizeof(int));
     
     printf("Addresses of newly allocated memory: ");
     for(int i = 0; i < n2; i++)

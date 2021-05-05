@@ -8,6 +8,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void *CustomIntCalloc(int size, int defVal)
+{
+    int *sizePtr = (int *)calloc(size, sizeof(int));
+    int *startPtr = sizePtr;
+    if(sizePtr != NULL)
+    {
+        if(defVal != 0)
+        {
+            for(int i = 0; i < size; i++)
+            {
+                *sizePtr++ = defVal;
+                printf("Pointer: %d", sizePtr);
+            }
+        }
+        return startPtr;
+    }
+}
+
 int main()
 {
     int n, *ptr, sum = 0;

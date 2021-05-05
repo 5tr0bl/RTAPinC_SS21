@@ -33,19 +33,15 @@ void *thePermanentHeap()
 {
     int *aHeapPointer = (int *)malloc(sizeof(int) * 10);
     int *start = aHeapPointer;
-    int *end = aHeapPointer + 10;
     int i = 0;
     if(aHeapPointer != NULL)
     {
-        while(start < end)
+        for(i; i<10; i++)
         {
-            *aHeapPointer += i;
-            *aHeapPointer = i;
-            i++;
-            start++;
+            *aHeapPointer++ = i;
+            printf("Pointer: %d", aHeapPointer);
         }
-            //aHeapPointer[i] = i;
-        return aHeapPointer;
+        return start;
     }
 }
 
@@ -57,7 +53,7 @@ int main()
         printf("I can allocate memory somewhere else and access it here!\n");
         for(int i = 0;i < 10; i++)
         {
-                printf("Heap value at index %d = %d \n", i, *ptr);
+                printf("Heap value at index %d = %d \n", i, *ptr+i);
         }
         //printf("%d\n", ptr[4]);
         free(ptr);
