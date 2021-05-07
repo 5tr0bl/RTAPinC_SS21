@@ -1,5 +1,6 @@
-# Attention: Due to the failure of the TU-IT, the zoom link will be published on ISIS. Until then, happy coding! 
-
+```diff
+- Attention: The zoom link for the online seminar is published on the ISIS platform.
+```
 
 
 # Real-Time Audio Programming In C
