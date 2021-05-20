@@ -1,3 +1,8 @@
+```diff
+- Attention: The zoom link for the online seminar is published on the ISIS platform.
+```
+
+
 # Real-Time Audio Programming In C
 Teaching material for the programming seminar ["Real-Time Audio Programming In C"](https://www.ak.tu-berlin.de/menue/lehre/sommersemester_2021/real_time_audio_programmierung_in_c/) of the summer semester 2021.
 
