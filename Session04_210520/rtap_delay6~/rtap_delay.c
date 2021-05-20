@@ -32,7 +32,7 @@ typedef struct rtap_delay6_tilde
 {
     t_object  x_obj;
     t_sample f;
-    vas_delay *delay;
+    vas_delay *delay;           //eigenes struct geschrieben in .h für die ganzen Taps
     t_outlet *outL;
     t_outlet *outR;
 } rtap_delay6_tilde;

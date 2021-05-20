@@ -28,6 +28,8 @@ static t_class *rtap_delay2_tilde_class;
  * level of the incoming signal
  */
 
+// Stereo Delay (auch mit 2 Inputs/Inlets)
+
 typedef struct rtap_delay2_tilde
 {
     t_object  x_obj;
@@ -50,12 +52,13 @@ typedef struct rtap_delay2_tilde
 
 t_int *rtap_delay2_tilde_perform(t_int *w)
 {
-    rtap_delay2_tilde *x = (rtap_delay2_tilde *)(w[1]);
-    t_sample  *in = (t_sample *)(w[2]);
-    t_sample  *outL =  (t_sample *)(w[3]);
+    rtap_delay2_tilde *x = (rtap_delay2_tilde *)(w[1]); //bei 1 ist immer Objekt selbst
+    t_sample  *in = (t_sample *)(w[2]);                 //dann kommen immer inlets
+    t_sample  *outL =  (t_sample *)(w[3]);              //dann immer outlets
     t_sample  *outR =  (t_sample *)(w[4]);
-    int n =  (int)(w[5]);
+    int n =  (int)(w[5]);                               // Vector Size
 
+    //die gerade geholten buffer aus pd werden an unser objekt gegeben
     vas_delay_process(x->delay, in, outL, outR, n);
     //vas_iir_lowpass_process(x->lowpass, in, out, n);
 
@@ -108,6 +111,9 @@ void *rtap_delay2_tilde_new(t_floatarg f)
     x->outR = outlet_new(&x->x_obj, &s_signal);
     x->delay = vas_delay_new(44100);
     
+    //Typische pd Syntax
+    // wird unten in Setup an pd übergeben
+    // sonst müsste man noch message (set delay ...) eintippen
     x->delayTap1 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("tap1"));
     x->delayTap2 = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("tap2"));
 

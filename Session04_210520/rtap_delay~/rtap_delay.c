@@ -45,6 +45,7 @@ typedef struct rtap_delay_tilde
  * @return A pointer to the signal chain right behind the rtap_delay_tilde object. <br>
  */
 
+
 t_int *rtap_delay_tilde_perform(t_int *w)
 {
     rtap_delay_tilde *x = (rtap_delay_tilde *)(w[1]);
@@ -109,6 +110,8 @@ void *rtap_delay_tilde_new(t_floatarg f)
  * @param level Sets the level parameter <br>
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
+
+// von hier (pd) wird an set Delay in vas delay (C) durchgegeben
 
 void rtap_delay_tilde_setDelayTime(rtap_delay_tilde *x, float delayTime)
 {

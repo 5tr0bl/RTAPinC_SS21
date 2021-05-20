@@ -65,6 +65,7 @@ t_int *stp_gain_tilde_perform(t_int *w)
  * @param sp A pointer the input and output vectors <br>
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
+//Jedes Signal external braucht die DSP Methode
 
 void stp_gain_tilde_dsp(stp_gain_tilde *x, t_signal **sp)
 {

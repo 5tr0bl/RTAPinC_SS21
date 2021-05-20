@@ -1,5 +1,6 @@
 #include "vas_delay.h"
 
+//bufferSize ist maximale Delay Zeit
 vas_delay *vas_delay_new(int bufferSize)
 {
     vas_delay *x = (vas_delay *)malloc(sizeof(vas_delay));
@@ -24,7 +25,7 @@ void vas_delay_process(vas_delay *x, float *in, float *out, int vectorSize)
     
     while(i--)
     {
-        x->writePointer[x->writeIndex++] = *in++;
+        x->writePointer[x->writeIndex++] = *in++;   //schreibe in ring buffer
         if(x->writeIndex >= x->bufferSize)
             x->writeIndex = 0;
         
@@ -33,6 +34,11 @@ void vas_delay_process(vas_delay *x, float *in, float *out, int vectorSize)
             x->readIndex = 0;
     }
 }
+
+/* 
+    wwie Read pointer setzen? bei einem delay von 1000 samples würde
+    man den Read Pointer anfangs auf 43100 setzen (bei 44.1kHz SampleRate)
+*/
 
 void vas_delay_setDelayTime(vas_delay *x, float delayInSamples)
 {

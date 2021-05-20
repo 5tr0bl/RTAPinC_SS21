@@ -8,6 +8,7 @@ vas_delay *vas_delay_new(int bufferSize)
     x->writePointer = x->buffer;
     x->writeIndex = 0;
     
+    //MaxNumber in .h file definiert
     for(int i = 0; i<MAXNUMBEROFTAPS;i++)
     {
         x->readPointer[i] = x->buffer;
