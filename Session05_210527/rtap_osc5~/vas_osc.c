@@ -55,7 +55,7 @@ void vas_osc_noteOn(vas_osc *x, float frequency, float velocity)
 void vas_osc_process(vas_osc *x, float *in, float *out, int vectorSize)
 {
     int i = vectorSize;
-    float voiceSample = 0;
+    float voiceSample = 0; //Output Variable je Stimme
     
     while(i--)
     {
@@ -75,6 +75,8 @@ void vas_osc_process(vas_osc *x, float *in, float *out, int vectorSize)
                 voiceSample *= x->voice[j].velocity;
                 voiceSample *= x->envelopeTable[x->voice[j].envelopeIndex++];
                 
+                //Deswegen keine Note Off Message
+                //sobald wir die Tablesize überschreiten fangen wir bei 0 an
                 if(x->voice[j].envelopeIndex >= x->tableSize)
                     x->voice[j].occupied = 0;
                 
