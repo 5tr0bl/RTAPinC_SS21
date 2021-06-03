@@ -134,6 +134,7 @@ void *rtap_delay10_tilde_new(t_floatarg f, t_floatarg delay_in_sec, t_floatarg g
 
 void rtap_delay10_tilde_set_params(rtap_delay10_tilde *x)
 {
+    //Diese MEthode holt Delay als Zeitwert
     float sample_rate = sys_getsr();
     float delayInSamples = (x->in_delay_sec * sample_rate);
     post("Delay:\ndelay time: %.1f\tgain: %.1f\tpan: %.1f", x->in_delay_sec, x->in_gain, x->in_pan);

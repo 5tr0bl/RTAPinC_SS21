@@ -132,6 +132,8 @@ void rtap_lowpass_tilde_setup(void)
 
       class_addmethod(rtap_lowpass_tilde_class, (t_method)rtap_lowpass_tilde_dsp, gensym("dsp"), 0);
 
+    //addmethod für Message Boxen,gibt ach noch andere Sachen...
+
       // this adds the gain message to our object
       class_addmethod(rtap_lowpass_tilde_class, (t_method)rtap_lowpass_tilde_setFrequency, gensym("freq"), A_DEFFLOAT,0);
 

@@ -132,7 +132,7 @@ void rtap_delay9_tilde_setRandomizedTap(rtap_delay9_tilde *x, float tapNumber)
 {   float sample_rate = sys_getsr();
     float delayInSec = ((float)(rand() % (int)MAX_DELAY_TIME_SEC ) / MAX_DELAY_TIME_SEC);
     float delayInSamples = delayInSec * sample_rate;
-    float gain = ((float)(rand() % 11 ) / 11);
+    float gain = ((float)(rand() % 11 ) / 11);      //11 durch 11 ergibt krummere Werte! 
     float pan = ((float)(rand() % 10 )/10);
     post("Random delay:\ntab no.: %.f\tdelay time: %.1f\tgain: %.1f\tpan: %.1f", tapNumber, delayInSec, gain, pan);
     vas_delay_setTap(x->delay, tapNumber, delayInSamples, gain, pan);
