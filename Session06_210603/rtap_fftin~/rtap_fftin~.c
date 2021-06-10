@@ -12,6 +12,9 @@
  * <br>
  */
 
+//sowohl für fftin als auch für fftout jeweils make aufrufen
+
+
 #include "m_pd.h"
 #include "vas_mem.h"
 #include "vas_util.h"

@@ -140,7 +140,7 @@ void rtap_osc6_tilde_setEnvelopeTable(rtap_osc6_tilde *x, t_symbol *name)
 }
 
 //LP Frequency
-void rtap_lowpass_tilde_setFrequency(rtap_lowpass_tilde *x, float freq)
+void rtap_lowpass_tilde_setFrequency(rtap_osc6_tilde *x, float freq)
 {
     vas_iir_lowpass_setCutoff(x->lowpass, freq);
 }
