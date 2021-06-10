@@ -14,9 +14,10 @@
 
 #include "m_pd.h"
 #include "vas_osc.h"
+#include "vas_delay.h"
 #include "./Session06_210603/rtap_lowpass~/vas_iir_lowpass.h"
 
-static t_class *rtap_osc6_tilde_class;
+static t_class *rtap_osc6_delay_tilde_class;
 
 /**
  * @struct rtap_osc6_tilde
@@ -29,17 +30,20 @@ static t_class *rtap_osc6_tilde_class;
  * level of the incoming signal
  */
 
-typedef struct rtap_osc6_tilde
+//Delayfiles des ERSTEN vorgestellten Delays wurden hier in den Ordner kopiert
+
+typedef struct rtap_osc6_delay_tilde
 {
     t_object  x_obj;
     t_sample f;
     vas_osc *osc;
     t_word *table;
     t_word *envelopeTable;
-    //pointer auf filter
+    //pointer auf delay
+    vas_delay *delay;
     vas_iir_lowpass *lowpass;
     t_outlet *out;
-} rtap_osc6_tilde;
+} rtap_osc6_delay_tilde;
 
 /**
  * @related rtap_osc6_tilde
@@ -52,15 +56,21 @@ typedef struct rtap_osc6_tilde
 
 t_int *rtap_osc6_tilde_perform(t_int *w)
 {
-    rtap_osc6_tilde *x = (rtap_osc6_tilde *)(w[1]);
+    rtap_osc6_delay_tilde *x = (rtap_osc6_delay_tilde *)(w[1]);
     t_sample  *in = (t_sample *)(w[2]);
     t_sample  *out =  (t_sample *)(w[3]);
     int n =  (int)(w[4]);
 
 //wir schreiben hiermit in den In statt in den Out
-    vas_osc_process(x->osc, in, in, n);
+    vas_osc_process(x->osc, in, out, n);
+    //Delay Process
+    //vas_delay_process(x->delay, in, out, n);
+
+    //die hier schreibt in den Input um Memory zu safen
+    vas_delay_processAddInPlace(x->delay, in, in, n);
+    
     //Lowpass Process 
-    vas_iir_lowpass_process(x->lowpass, in, out, n);
+    //vas_iir_lowpass_process(x->lowpass, in, out, n);
     //Reihenfolge der process Methoden ist ENTSCHEIDEND!!
 
     /* return a pointer to the dataspace for the next dsp-object */
@@ -75,7 +85,7 @@ t_int *rtap_osc6_tilde_perform(t_int *w)
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
 
-void rtap_osc6_tilde_dsp(rtap_osc6_tilde *x, t_signal **sp)
+void rtap_osc6_tilde_dsp(rtap_osc6_delay_tilde *x, t_signal **sp)
 {
     dsp_add(rtap_osc6_tilde_perform, 4, x, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n);
 }
@@ -87,10 +97,12 @@ void rtap_osc6_tilde_dsp(rtap_osc6_tilde *x, t_signal **sp)
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
 
-void rtap_osc6_tilde_free(rtap_osc6_tilde *x)
+void rtap_osc6_tilde_free(rtap_osc6_delay_tilde *x)
 {
     outlet_free(x->out);
     vas_osc_free(x->osc);
+    //Delay free
+    vas_delay_free(x->delay);
     //Lowpass free
     vas_iir_lowpass_free(x->lowpass);
 }
@@ -102,7 +114,7 @@ void rtap_osc6_tilde_free(rtap_osc6_tilde *x)
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
 
-void rtap_getArray(rtap_osc6_tilde *x, t_symbol *arrayname, t_word **array, int *length)
+void rtap_getArray(rtap_osc6_delay_tilde *x, t_symbol *arrayname, t_word **array, int *length)
 {
     t_garray *a;
 
@@ -123,7 +135,7 @@ void rtap_getArray(rtap_osc6_tilde *x, t_symbol *arrayname, t_word **array, int 
     }
 }
 
-void rtap_osc6_tilde_setExternTable(rtap_osc6_tilde *x, t_symbol *name)
+void rtap_osc6_tilde_setExternTable(rtap_osc6_delay_tilde *x, t_symbol *name)
 {
     int length = 0;
     rtap_getArray(x, name, &x->table, &length);
@@ -131,7 +143,7 @@ void rtap_osc6_tilde_setExternTable(rtap_osc6_tilde *x, t_symbol *name)
         x->osc->lookupTable[i] = x->table[i].w_float;
 }
 
-void rtap_osc6_tilde_setEnvelopeTable(rtap_osc6_tilde *x, t_symbol *name)
+void rtap_osc6_tilde_setEnvelopeTable(rtap_osc6_delay_tilde *x, t_symbol *name)
 {
     int length = 0;
     rtap_getArray(x, name, &x->envelopeTable, &length);
@@ -140,18 +152,42 @@ void rtap_osc6_tilde_setEnvelopeTable(rtap_osc6_tilde *x, t_symbol *name)
 }
 
 //LP Frequency
-void rtap_lowpass_tilde_setFrequency(rtap_lowpass_tilde *x, float freq)
+void rtap_lowpass_tilde_setFrequency(rtap_osc6_delay_tilde *x, float freq)
 {
     vas_iir_lowpass_setCutoff(x->lowpass, freq);
 }
 
-void *rtap_osc6_tilde_new(t_floatarg f)
+//Delay Time
+void rtap_delay_tilde_setDelayTime(rtap_osc6_delay_tilde *x, float delayTime)
 {
-    rtap_osc6_tilde *x = (rtap_osc6_tilde *)pd_new(rtap_osc6_tilde_class);
+    vas_delay_setDelayTime(x->delay, delayTime);   
+}
+
+void vas_delay_processAddInPlace(vas_delay *x, float *in, float *out, int vectorSize)
+{
+    int i = vectorSize;
+    
+    while(i--)
+    {
+        x->writePointer[x->writeIndex++] = *in++;   //schreibe in ring buffer
+        if(x->writeIndex >= x->bufferSize)
+            x->writeIndex = 0;
+        
+        *out++ += x->readPointer[x->readIndex++];       //+= statt = wie im urspr. Beispiel!!
+        if(x->readIndex >= x->bufferSize)
+            x->readIndex = 0;
+    }
+}
+
+void *rtap_osc6_delay_tilde_new(t_floatarg f)
+{
+    rtap_osc6_delay_tilde *x = (rtap_osc6_delay_tilde *)pd_new(rtap_osc6_delay_tilde_class);
     
     //The main inlet is created automatically
     x->out = outlet_new(&x->x_obj, &s_signal);
     x->osc = vas_osc_new(44100);
+    //Delay hinzufügen
+    x->delay = vas_delay_new(44100);
     //Lowpass hinzufügen
     x->lowpass = vas_iir_lowpass_new(1000);
     return (void *)x;
@@ -165,7 +201,7 @@ void *rtap_osc6_tilde_new(t_floatarg f)
  * For more information please refer to the <a href = "https://github.com/pure-data/externals-howto" > Pure Data Docs </a> <br>
  */
 
-void rtap_osc6_tilde_noteOn(rtap_osc6_tilde *x, float frequency, float velocity)
+void rtap_osc6_tilde_noteOn(rtap_osc6_delay_tilde *x, float frequency, float velocity)
 {
     vas_osc_noteOn(x->osc, frequency, velocity);   
 }
@@ -178,22 +214,25 @@ void rtap_osc6_tilde_noteOn(rtap_osc6_tilde *x, float frequency, float velocity)
 
 void rtap_osc6_tilde_setup(void)
 {
-      rtap_osc6_tilde_class = class_new(gensym("rtap_osc6~"),
-            (t_newmethod)rtap_osc6_tilde_new,
+      rtap_osc6_delay_tilde_class = class_new(gensym("rtap_osc6~"),
+            (t_newmethod)rtap_osc6_delay_tilde_new,
             (t_method)rtap_osc6_tilde_free,
-        sizeof(rtap_osc6_tilde),
+        sizeof(rtap_osc6_delay_tilde),
             CLASS_DEFAULT,
             A_DEFFLOAT, 0);
 
-      class_addmethod(rtap_osc6_tilde_class, (t_method)rtap_osc6_tilde_dsp, gensym("dsp"), 0);
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_osc6_tilde_dsp, gensym("dsp"), 0);
 
       // this adds the gain message to our object
-      class_addmethod(rtap_osc6_tilde_class, (t_method)rtap_osc6_tilde_noteOn, gensym("noteon"), A_DEFFLOAT, A_DEFFLOAT, 0);
-      class_addmethod(rtap_osc6_tilde_class, (t_method)rtap_osc6_tilde_setExternTable, gensym("setwaveform"), A_SYMBOL, 0);
-      class_addmethod(rtap_osc6_tilde_class, (t_method)rtap_osc6_tilde_setEnvelopeTable, gensym("setenvelope"), A_SYMBOL, 0);
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_osc6_tilde_noteOn, gensym("noteon"), A_DEFFLOAT, A_DEFFLOAT, 0);
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_osc6_tilde_setExternTable, gensym("setwaveform"), A_SYMBOL, 0);
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_osc6_tilde_setEnvelopeTable, gensym("setenvelope"), A_SYMBOL, 0);
       
-    //Lowpass Methode hinzufüge
-    class_addmethod(rtap_osc6_tilde_class, (t_method)rtap_lowpass_tilde_setFrequency, gensym("freq"), A_DEFFLOAT,0);
+      //Delay Methode
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_delay_tilde_setDelayTime, gensym("delaytime"), A_DEFFLOAT);
+      
+      //Lowpass Methode hinzufüge
+      class_addmethod(rtap_osc6_delay_tilde_class, (t_method)rtap_lowpass_tilde_setFrequency, gensym("freq"), A_DEFFLOAT,0);
 
-      CLASS_MAINSIGNALIN(rtap_osc6_tilde_class, rtap_osc6_tilde, f);
+      CLASS_MAINSIGNALIN(rtap_osc6_delay_tilde_class, rtap_osc6_delay_tilde, f);
 }
