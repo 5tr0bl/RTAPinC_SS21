@@ -15,7 +15,7 @@
 #include "m_pd.h"
 #include "vas_osc.h"
 #include "vas_delay.h"
-#include "./Session06_210603/rtap_lowpass~/vas_iir_lowpass.h"
+#include "vas_iir_lowpass.h"
 
 static t_class *rtap_osc6_delay_tilde_class;
 
